@@ -87,8 +87,17 @@ for ( k in 1:length( limg ) ) {
 
 # map time series
 reg = timeSeriesMotionCorrect( tar, mimgLow )
-sup = timeSeriesSuperResolution( tar, reg, 'sharpen', param1 = 0.5 )
-print(  MSE( tar, sup ) )
+
+ct = 1
+wts = seq( from=-2, to=2, by=0.1 )
+errs = rep( NA, length( wts )) 
+for ( wt in wts ) {
+  sup = timeSeriesSuperResolution( tar, reg, 'sharpen', param1 = wt )
+  print( paste( wt,   MSE( tar, sup ) ) )
+  errs[ ct ] = MSE( tar, sup )
+  ct = ct + 1
+  }
+plot( wts, errs )
 
 ```
 
