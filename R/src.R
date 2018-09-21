@@ -8,7 +8,7 @@
 #' @examples
 #' library( ANTsRCore )
 #' MSE( ri(1), ri(2) )
-#' #alternatively it can be done like:
+#' # alternatively it can be done like:
 #' MSE( ri(1) - ri(2) )
 #' @name error
 NULL
