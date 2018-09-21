@@ -230,7 +230,8 @@ staticSuperResolution <- function(
   if ( ! ( method %in% allowableMethods ) )
     stop( paste( 'method', method, 'not allowed -- see help.' ) )
   if ( method == 'sharpen' ) return( 
-    iMath( resampleImage( antsGetSpacing( inputImage )/expansionFactor ), "Sharpen" ) )
+    iMath( resampleImage( inputImage, 
+      antsGetSpacing( inputImage )/expansionFactor, useVoxels=FALSE ), "Sharpen" ) )
   if ( method == 'neurenhance' | method == 'pysr' ) {
     # must first call 
 #    system( 'source ~/code/tensorflow/venv/bin/activate' )
