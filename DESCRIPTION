@@ -1,0 +1,29 @@
+Package: xrayr
+Type: Package
+Title: Static and dynamic xray analytics
+Version: 0.1.0
+Authors@R: c(
+    person(c("Brian", "B"), "Avants", role = c("aut", "cre"), email = "stnava@gmail.com"),
+    person(c("Elliott", "?"), "Greenblatt", role = "ctb", email = "NA")
+    )
+Maintainer: Brian B. Avants <stnava@gmail.com>
+Description: Provides quantification tools for xray data.
+    High resolution xray data and dynamic xray data are 
+    widely available and encode many levels of anatomy and
+    physiology.  Dynamic chest radiography is particularly 
+    valuable because it encodes not only static anatomy but 
+    also the motion of heart, lungs and diaphragm as well as
+    the potential for gaining insight into lung vasculature.
+    This package explors quantification of this type of data.
+License: Apache License 2.0
+Encoding: UTF-8
+LazyData: true
+Imports: ANTsR,
+  ANTsRCore,
+  magrittr,
+  pracma,
+  rmarkdown
+NeedsCompilation: yes
+SystemRequirements: cmake, git, clang
+VignetteBuilder: rmarkdown
+RoxygenNote: 6.1.0

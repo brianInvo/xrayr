@@ -1,0 +1,74 @@
+---
+title: "xrayr: dynamic and static xray quantification"
+author: "Brian B. Avants, Elliott Greenblatt, et. al."
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteIndexEntry{xrayr for DCR}
+    \usepackage[utf8]{inputenc}
+---
+
+Focus on chest radiography.
+
+```{r global options, include=FALSE}
+library( knitr )
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+
+```{r libs}
+library( xrayr )
+library( magrittr )
+library( ANTsRCore )
+library( ANTsR )
+```
+
+# Utilities
+
+## Motion correction
+
+Motion correction.
+
+```{r mot}
+temp1 = resampleImage( ri(1), 4 )
+temp2 = resampleImage( ri(2), 4 )
+tarspace = makeImage( c( dim( temp1 ), 2 ) )
+pdcr = mergeListToNDImage( tarspace, list( temp1, temp2 ) )
+reg = timeSeriesMotionCorrect( temp1, pdcr )
+```
+
+
+## Segmentation
+
+JLF
+
+```{r jlf}
+```
+
+## Denoising
+
+
+
+# Applications
+
+## Super resolution
+
+Motion correction.
+
+```{r sr}
+sup = timeSeriesSuperResolution( temp1, reg, method = 'average' )
+```
+
+
+
+## Functional studies
+
+decomposition
+
+```{r perf}
+```
+
+
+
+## References
+
+Tanaka etc
