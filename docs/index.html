@@ -66,14 +66,36 @@
       
       </header><div class="row">
   <div class="contents col-md-9">
-    Provides quantification tools for xray data.
-    High resolution xray data and dynamic xray data are 
-    widely available and encode many levels of anatomy and
-    physiology.  Dynamic chest radiography is particularly 
-    valuable because it encodes not only static anatomy but 
-    also the motion of heart, lungs and diaphragm as well as
-    the potential for gaining insight into lung vasculature.
-    This package explors quantification of this type of data.
+    
+<div id="see-documentation-at-this-site" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#see-documentation-at-this-site" class="anchor"></a>See documentation at <a href="http://brianinvo.github.io/xrayr/index.html">this site</a>
+</h1></div>
+</div>
+<div id="see-this" class="section level1">
+<h1 class="hasAnchor">
+<a href="#see-this" class="anchor"></a>see <a href="https://medium.com/@sebagomez/installing-the-docker-client-on-ubuntus-windows-subsystem-for-linux-612b392a44c4%20#">this</a>
+</h1>
+</div>
+<div id="for-windows-docker-install-instrux---needed-for-neuralenhance" class="section level1">
+<h1 class="hasAnchor">
+<a href="#for-windows-docker-install-instrux---needed-for-neuralenhance" class="anchor"></a>for windows docker install instrux …. needed for neuralenhance</h1>
+</div>
+<div id="neuralenahance" class="section level1">
+<h1 class="hasAnchor">
+<a href="#neuralenahance" class="anchor"></a>neuralenahance</h1>
+<p>docker run –rm -v <code>pwd</code>:/ne/input -it alexjc/neural-enhance –help</p>
+<p>alias enhance=‘function ne() { docker run –rm -v “$(pwd)/<code>dirname ${@:$#}</code>”:/ne/input -it alexjc/neural-enhance ${@:1:$#-1} “input/<code>basename ${@:$#}</code>”; }; ne’</p>
+</div>
+<div id="now-run-any-of-the-examples-above-using-this-alias-without-the--py-extension-" class="section level1">
+<h1 class="hasAnchor">
+<a href="#now-run-any-of-the-examples-above-using-this-alias-without-the--py-extension-" class="anchor"></a>Now run any of the examples above using this alias, without the <code>.py</code> extension.</h1>
+</div>
+<div id="enhance-zoom1-modelrepair-imagesbroken-jpg" class="section level1">
+<h1 class="hasAnchor">
+<a href="#enhance-zoom1-modelrepair-imagesbroken-jpg" class="anchor"></a>enhance –zoom=1 –model=repair images/broken.jpg</h1>
+</div>
+
   </div>
 
   <div class="col-md-3" id="sidebar">

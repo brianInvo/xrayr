@@ -67,7 +67,7 @@ PSNR <- function(x, y){
 #' @importFrom magrittr %>%
 #' @importFrom ANTsRCore antsRegistration antsImageRead
 #' @importFrom ANTsRCore resampleImage antsAverageImages
-#' @importFrom ANTsRCore ri iMath
+#' @importFrom ANTsRCore ri iMath antsImageWrite antsGetSpacing
 #' @importFrom ANTsR mergeListToNDImage splitNDImageToList
 #' @importFrom pracma detrend
 xrayMotionCorrect <- function( 
@@ -124,7 +124,8 @@ timeSeriesMotionCorrect <- function(
   ... ) {
   if ( missing( totalSigma ) ) totalSigma = 6
   if ( missing( flowSigma ) ) flowSigma = 6
-  motlist = splitNDImageToList( movingTimeSeries )
+  if ( class( movingTimeSeries ) != 'list' )
+    motlist = splitNDImageToList( movingTimeSeries ) else motlist = movingTimeSeries
   for ( k in 1:length( motlist ) ) {
 
     reg = ANTsRCore::antsRegistration( fixedStaticImage, motlist[[k]], 'SyN', 
@@ -143,10 +144,11 @@ timeSeriesMotionCorrect <- function(
 #'
 #' Implements several different strategies for super-resolution from time series data.
 #'
-#' @param fixedStaticImage fixed target image
-#' @param mappedTimeSeries pre-aligned to the fixed space
-#' @param method one of average, sharpen, pysr, neurenhance, majon
-#' @param weight generic weight term
+#' @param fixedStaticImage target image space
+#' @param mappedTimeSeries pre-aligned to the fixed space, not necessarily the same resolution
+#' @param method one of average, sharpen, majon
+#' @param param1 generic weight term for sharpen or mesh size for majon
+#' @param param2 number of levels for majon
 #' @return super resolution image
 #' @author Avants BB
 #' @examples
@@ -159,32 +161,83 @@ timeSeriesMotionCorrect <- function(
 #' temp3 = resampleImage( ri(1), 4 )
 #' tarspace = makeImage( c( dim( temp1 ), 2 ) , spacing = c( 8, 8, 1 ) )
 #' pdcr = mergeListToNDImage( tarspace, list( temp1, temp2 ) )
-#' reg = timeSeriesMotionCorrect( temp3, pdcr )
-#' sup = timeSeriesSuperResolution( temp3, reg )
+#' sup = timeSeriesSuperResolution( temp3, pdcr )
 #'
 #' @export timeSeriesSuperResolution
 timeSeriesSuperResolution <- function( 
-  fixedStaticImage, 
+  fixedStaticImage,
   mappedTimeSeries, 
   method = 'average', 
-  weight = 0.5 ) {
-  allowableMethods = c( 'average', 'sharpen', 'pysr', 'neurenhance', 'majon' )
+  param1, param2 ) {
+  allowableMethods = c( 'average', 'sharpen', 'majon' )
   if ( ! ( method %in% allowableMethods ) )
     stop( paste( 'method', method, 'not allowed -- see help.' ) )
-  if ( method == 'average' )
-    return( antsAverageImages( mappedTimeSeries ) )
-  if ( method == 'sharpen' ) {
-    avg = antsAverageImages( mappedTimeSeries )
-    return( avg * weight + iMath( avg, 'Sharpen' ) * ( 1.0 - weight )  )
+  if ( class( mappedTimeSeries ) != 'list' )
+    mappedTimeSeries = splitNDImageToList( mappedTimeSeries )
+  if ( method == 'average' | method == 'sharpen' ) {
+    if ( all( antsGetSpacing( mappedTimeSeries[[1]] ) == antsGetSpacing( fixedStaticImage )  )  ) 
+      {
+      avg = ( antsAverageImages( mappedTimeSeries ) ) 
+      } else {
+      avg = timeSeriesMotionCorrect( fixedStaticImage, mappedTimeSeries )
+      avg = antsAverageImages( avg )
+      }
+      if ( method == 'sharpen' ) {
+        return( avg * param1 + iMath( avg, 'Sharpen' ) * ( 1.0 - param1 )  )
+      } else return( avg )
     }
   if ( method == 'majon' ) {
-    majicfn = 'x'
+    majicfn = '/tmp/majic.nii.gz'
+    reffn='/tmp/ref.nii.gz'
+    antsImageWrite( fixedStaticImage, reffn )
+    fns=paste0( '/tmp/reg',1:length(mappedTimeSeries),'.nii.gz')
+    for ( fn in 1:length( fns ) ) antsImageWrite( mappedTimeSeries[[fn]], fns[fn] )
+    fns=paste( paste0( '/tmp/reg',1:length(mappedTimeSeries),'.nii.gz'), collapse=' ' )
+    cmd=paste('SuperResolution ', fixedStaticImage@dimension,' ',majicfn,' ',reffn,' -1 ',param1, param2, ' ',fns )
+    print( cmd )
+    system( cmd )
     majic = antsImageRead( majicfn )
     return( majic )
     }
-  if ( method == 'pysr' | method == 'neurenhance' ) {
-    avg = antsAverageImages( mappedTimeSeries )
-    return( avg )
-    }
 
+}
+
+
+
+
+#' Static super resolution algorithms.
+#'
+#' Implements several different strategies for super-resolution from static data.
+#'
+#' @param inputImage image to be expanded
+#' @param expansionFactor float value
+#' @param method one of pysr, neurenhance
+#' @return super resolution image
+#' @author Avants BB
+#' @examples
+#'
+#' library( magrittr )
+#' library( ANTsRCore )
+#' library( ANTsR )
+#' temp1 = resampleImage( ri(1), 8 )
+#' sup = staticSuperResolution( temp1, 2 )
+#'
+#' @export staticSuperResolution
+staticSuperResolution <- function( 
+  inputImage, 
+  expansionFactor, 
+  method = 'neurenhance' ) {
+  allowableMethods = c( 'pysr', 'neurenhance' )
+  if ( ! ( method %in% allowableMethods ) )
+    stop( paste( 'method', method, 'not allowed -- see help.' ) )
+  if ( method == 'neurenhance' | method == 'pysr' ) {
+    # must first call 
+#    system( 'source ~/code/tensorflow/venv/bin/activate' )
+    ANTsRCore::antsImageWrite( ANTsRCore::antsImageClone( iMath( inputImage, "Normalize") * 255, 'unsigned char' ), '/tmp/temp.jpg')
+    cmd='python3 /home/bavants/code/Image-Super-Resolution/main.py /tmp/temp.jpg --scale=2'
+    system( cmd )
+    return( ANTsRCore::antsImageRead( '/tmp/temp_scaled(2x).jpg' ) )
+#    cmd=paste0('enhance --zoom=',expansionFactor,' --model=repair /tmp/temp.jpg ')
+    }
+  return( NA )
 }

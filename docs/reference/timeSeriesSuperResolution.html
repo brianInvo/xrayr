@@ -107,26 +107,30 @@
     </div>
 
     <pre class="usage"><span class='fu'>timeSeriesSuperResolution</span>(<span class='no'>fixedStaticImage</span>, <span class='no'>mappedTimeSeries</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"average"</span>, <span class='kw'>weight</span> <span class='kw'>=</span> <span class='fl'>0.5</span>)</pre>
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"average"</span>, <span class='no'>param1</span>, <span class='no'>param2</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>fixedStaticImage</th>
-      <td><p>fixed target image</p></td>
+      <td><p>target image space</p></td>
     </tr>
     <tr>
       <th>mappedTimeSeries</th>
-      <td><p>pre-aligned to the fixed space</p></td>
+      <td><p>pre-aligned to the fixed space, not necessarily the same resolution</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>one of average, sharpen, pysr, neurenhance, majon</p></td>
+      <td><p>one of average, sharpen, majon</p></td>
     </tr>
     <tr>
-      <th>weight</th>
-      <td><p>generic weight term</p></td>
+      <th>param1</th>
+      <td><p>generic weight term for sharpen or mesh size for majon</p></td>
+    </tr>
+    <tr>
+      <th>param2</th>
+      <td><p>number of levels for majon</p></td>
     </tr>
     </table>
     
@@ -145,8 +149,7 @@
 <span class='no'>temp3</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/resampleImage'>resampleImage</a></span>( <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/ri'>ri</a></span>(<span class='fl'>1</span>), <span class='fl'>4</span> )
 <span class='no'>tarspace</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/makeImage'>makeImage</a></span>( <span class='fu'>c</span>( <span class='fu'>dim</span>( <span class='no'>temp1</span> ), <span class='fl'>2</span> ) , <span class='kw'>spacing</span> <span class='kw'>=</span> <span class='fu'>c</span>( <span class='fl'>8</span>, <span class='fl'>8</span>, <span class='fl'>1</span> ) )
 <span class='no'>pdcr</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsR/topics/mergeListToNDImage'>mergeListToNDImage</a></span>( <span class='no'>tarspace</span>, <span class='fu'>list</span>( <span class='no'>temp1</span>, <span class='no'>temp2</span> ) )
-<span class='no'>reg</span> <span class='kw'>=</span> <span class='fu'><a href='timeSeriesMotionCorrect.html'>timeSeriesMotionCorrect</a></span>( <span class='no'>temp3</span>, <span class='no'>pdcr</span> )
-<span class='no'>sup</span> <span class='kw'>=</span> <span class='fu'>timeSeriesSuperResolution</span>( <span class='no'>temp3</span>, <span class='no'>reg</span> )</div></pre>
+<span class='no'>sup</span> <span class='kw'>=</span> <span class='fu'>timeSeriesSuperResolution</span>( <span class='no'>temp3</span>, <span class='no'>pdcr</span> )</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

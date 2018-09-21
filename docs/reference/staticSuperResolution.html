@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • xrayr</title>
+<title>Static super resolution algorithms. — staticSuperResolution • xrayr</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Static super resolution algorithms. — staticSuperResolution" />
+
+<meta property="og:description" content="Implements several different strategies for super-resolution from static data." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -46,7 +49,7 @@
   </head>
 
   <body>
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -90,66 +93,66 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Static super resolution algorithms.</h1>
+    
+    <div class="hidden name"><code>staticSuperResolution.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    
+    <p>Implements several different strategies for super-resolution from static data.</p>
+    
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
-
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="error.html">MSE()</a></code> <code><a href="error.html">MAE()</a></code> <code><a href="error.html">PSNR()</a></code> </p>
-        </td>
-        <td><p>Error measurements of images (from redr)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="staticSuperResolution.html">staticSuperResolution()</a></code> </p>
-        </td>
-        <td><p>Static super resolution algorithms.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="timeSeriesMotionCorrect.html">timeSeriesMotionCorrect()</a></code> </p>
-        </td>
-        <td><p>Suggested parameters for deformable motion correction for a time series.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="timeSeriesSuperResolution.html">timeSeriesSuperResolution()</a></code> </p>
-        </td>
-        <td><p>Time series super resolution algorithms.</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="xrayMotionCorrect.html">xrayMotionCorrect()</a></code> </p>
-        </td>
-        <td><p>Suggested parameters for deformable intrasubject xray registration.</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>staticSuperResolution</span>(<span class='no'>inputImage</span>, <span class='no'>expansionFactor</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"neurenhance"</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>inputImage</th>
+      <td><p>image to be expanded</p></td>
+    </tr>
+    <tr>
+      <th>expansionFactor</th>
+      <td><p>float value</p></td>
+    </tr>
+    <tr>
+      <th>method</th>
+      <td><p>one of pysr, neurenhance</p></td>
+    </tr>
     </table>
-  </div>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>super resolution image</p>
+    
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'>
+<span class='fu'>library</span>( <span class='no'>magrittr</span> )
+<span class='fu'>library</span>( <span class='no'>ANTsRCore</span> )
+<span class='fu'>library</span>( <span class='no'>ANTsR</span> )
+<span class='no'>temp1</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/resampleImage'>resampleImage</a></span>( <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/ri'>ri</a></span>(<span class='fl'>1</span>), <span class='fl'>8</span> )
+<span class='no'>sup</span> <span class='kw'>=</span> <span class='fu'>staticSuperResolution</span>( <span class='no'>temp1</span>, <span class='fl'>2</span> )</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#section-all-functions">All functions</a></li>
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#value">Value</a></li>
+      
+      <li><a href="#examples">Examples</a></li>
     </ul>
+
+    <h2>Author</h2>
+    
+Avants BB
+
   </div>
 </div>
 

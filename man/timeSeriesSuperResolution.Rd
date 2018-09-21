@@ -5,16 +5,18 @@
 \title{Time series super resolution algorithms.}
 \usage{
 timeSeriesSuperResolution(fixedStaticImage, mappedTimeSeries,
-  method = "average", weight = 0.5)
+  method = "average", param1, param2)
 }
 \arguments{
-\item{fixedStaticImage}{fixed target image}
+\item{fixedStaticImage}{target image space}
 
-\item{mappedTimeSeries}{pre-aligned to the fixed space}
+\item{mappedTimeSeries}{pre-aligned to the fixed space, not necessarily the same resolution}
 
-\item{method}{one of average, sharpen, pysr, neurenhance, majon}
+\item{method}{one of average, sharpen, majon}
 
-\item{weight}{generic weight term}
+\item{param1}{generic weight term for sharpen or mesh size for majon}
+
+\item{param2}{number of levels for majon}
 }
 \value{
 super resolution image
@@ -32,8 +34,7 @@ temp2 = resampleImage( ri(1), 8 )
 temp3 = resampleImage( ri(1), 4 )
 tarspace = makeImage( c( dim( temp1 ), 2 ) , spacing = c( 8, 8, 1 ) )
 pdcr = mergeListToNDImage( tarspace, list( temp1, temp2 ) )
-reg = timeSeriesMotionCorrect( temp3, pdcr )
-sup = timeSeriesSuperResolution( temp3, reg )
+sup = timeSeriesSuperResolution( temp3, pdcr )
 
 }
 \author{
