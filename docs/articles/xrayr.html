@@ -48,7 +48,14 @@
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/brianInvo/xrayr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -65,7 +72,7 @@
             
             <h4 class="date">2018-09-21</h4>
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/brianInvo/xrayr/blob/master/vignettes/xrayr.Rmd"><code>vignettes/xrayr.Rmd</code></a></small>
       <div class="hidden name"><code>xrayr.Rmd</code></div>
 
     </div>
@@ -114,8 +121,50 @@ reg =<span class="st"> </span><span class="kw"><a href="../reference/timeSeriesM
 <div id="super-resolution" class="section level2">
 <h2 class="hasAnchor">
 <a href="#super-resolution" class="anchor"></a>Super resolution</h2>
-<p>Motion correction.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sup =<span class="st"> </span><span class="kw"><a href="../reference/timeSeriesSuperResolution.html">timeSeriesSuperResolution</a></span>( temp1, reg, <span class="dt">method =</span> <span class="st">'average'</span> )</code></pre></div>
+<p>Real data.</p>
+<div id="procedure-outline" class="section level3">
+<h3 class="hasAnchor">
+<a href="#procedure-outline" class="anchor"></a>PROCEDURE OUTLINE</h3>
+<ol style="list-style-type: decimal">
+<li>downsample-upsample to create simulated data</li>
+<li>motion correct</li>
+<li>avg/sharpen to get super-res estimate</li>
+</ol>
+<p>procedure would differ slightly in a pure testing context ie it would be iterated until convergence but ultimately should probably be replaced with convnets</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">################
+<span class="kw">library</span>( ANTsR )
+<span class="kw">library</span>( xrayr )
+baseDir =<span class="st"> "/mnt/c/Users/bavants/projects/kmXrayPilotData/superRes/lowres/"</span>
+id =<span class="st"> "0070"</span>
+fns =<span class="st"> </span><span class="kw">Sys.glob</span>( <span class="kw">paste0</span>( baseDir, <span class="st">"*"</span>, id, <span class="st">"*mhd"</span> ) )
+img =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ANTsRCore/topics/antsImageRead">antsImageRead</a></span>( fns[<span class="dv">1</span>] )
+limg =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ANTsR/topics/splitNDImageToList">splitNDImageToList</a></span>( img )
+mimgLow =<span class="st"> </span><span class="kw">list</span>()
+ww =<span class="st"> </span><span class="kw">c</span>( <span class="dv">5</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">6</span><span class="op">:</span><span class="dv">8</span>) <span class="co"># arbitrarily chosen</span>
+limg =<span class="st"> </span>limg[ ww[ <span class="op">-</span><span class="dv">1</span> ] ] <span class="co"># some stuff nearby</span>
+<span class="cf">for</span> ( k <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>( limg ) ) {
+  <span class="co"># downsample by factor of X for training data</span>
+  X =<span class="st"> </span><span class="fl">2.7</span>
+  hiSpc =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ANTsRCore/topics/antsImageGetSet">antsGetSpacing</a></span>( limg[[ k ]])
+  loSpc =<span class="st"> </span>hiSpc <span class="op">*</span><span class="st"> </span>X
+  moLo =<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ANTsRCore/topics/resampleImage">resampleImage</a></span>( limg[[ k ]], loSpc, <span class="dt">useVoxels =</span> F )
+  mimgLow[[ k ]] =<span class="st"> </span>moLo
+  }
+
+<span class="co"># map time series</span>
+reg =<span class="st"> </span><span class="kw"><a href="../reference/timeSeriesMotionCorrect.html">timeSeriesMotionCorrect</a></span>( tar, mimgLow )
+
+ct =<span class="st"> </span><span class="dv">1</span>
+wts =<span class="st"> </span><span class="kw">seq</span>( <span class="dt">from=</span><span class="op">-</span><span class="dv">2</span>, <span class="dt">to=</span><span class="dv">2</span>, <span class="dt">by=</span><span class="fl">0.1</span> )
+errs =<span class="st"> </span><span class="kw">rep</span>( <span class="ot">NA</span>, <span class="kw">length</span>( wts )) 
+<span class="cf">for</span> ( wt <span class="cf">in</span> wts ) {
+  sup =<span class="st"> </span><span class="kw"><a href="../reference/timeSeriesSuperResolution.html">timeSeriesSuperResolution</a></span>( tar, reg, <span class="st">'sharpen'</span>, <span class="dt">param1 =</span> wt )
+  <span class="kw">print</span>( <span class="kw">paste</span>( wt,   <span class="kw"><a href="../reference/error.html">MSE</a></span>( tar, sup ) ) )
+  errs[ ct ] =<span class="st"> </span><span class="kw"><a href="../reference/error.html">MSE</a></span>( tar, sup )
+  ct =<span class="st"> </span>ct <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+  }
+<span class="kw">plot</span>( wts, errs )</code></pre></div>
+</div>
 </div>
 <div id="functional-studies" class="section level2">
 <h2 class="hasAnchor">

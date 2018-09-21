@@ -204,14 +204,13 @@ timeSeriesSuperResolution <- function(
 
 
 
-
 #' Static super resolution algorithms.
 #'
 #' Implements several different strategies for super-resolution from static data.
 #'
 #' @param inputImage image to be expanded
 #' @param expansionFactor float value
-#' @param method one of pysr, neurenhance
+#' @param method one of sharpen, pysr, neurenhance
 #' @return super resolution image
 #' @author Avants BB
 #' @examples
@@ -226,10 +225,12 @@ timeSeriesSuperResolution <- function(
 staticSuperResolution <- function( 
   inputImage, 
   expansionFactor, 
-  method = 'neurenhance' ) {
-  allowableMethods = c( 'pysr', 'neurenhance' )
+  method = 'sharpen' ) {
+  allowableMethods = c( 'sharpen', 'pysr', 'neurenhance' )
   if ( ! ( method %in% allowableMethods ) )
     stop( paste( 'method', method, 'not allowed -- see help.' ) )
+  if ( method == 'sharpen' ) return( 
+    iMath( resampleImage( antsGetSpacing( inputImage )/expansionFactor ), "Sharpen" ) )
   if ( method == 'neurenhance' | method == 'pysr' ) {
     # must first call 
 #    system( 'source ~/code/tensorflow/venv/bin/activate' )

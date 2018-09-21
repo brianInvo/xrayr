@@ -82,7 +82,12 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/brianInvo/xrayr">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
       
     </div><!--/.nav-collapse -->
@@ -96,7 +101,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Static super resolution algorithms.</h1>
-    
+    <small class="dont-index">Source: <a href='https://github.com/brianInvo/xrayr/blob/master/R/src.R'><code>R/src.R</code></a></small>
     <div class="hidden name"><code>staticSuperResolution.Rd</code></div>
     </div>
 
@@ -106,8 +111,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>staticSuperResolution</span>(<span class='no'>inputImage</span>, <span class='no'>expansionFactor</span>,
-  <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"neurenhance"</span>)</pre>
+    <pre class="usage"><span class='fu'>staticSuperResolution</span>(<span class='no'>inputImage</span>, <span class='no'>expansionFactor</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"sharpen"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -122,7 +126,7 @@
     </tr>
     <tr>
       <th>method</th>
-      <td><p>one of pysr, neurenhance</p></td>
+      <td><p>one of sharpen, pysr, neurenhance</p></td>
     </tr>
     </table>
     
@@ -137,7 +141,8 @@
 <span class='fu'>library</span>( <span class='no'>ANTsRCore</span> )
 <span class='fu'>library</span>( <span class='no'>ANTsR</span> )
 <span class='no'>temp1</span> <span class='kw'>=</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/resampleImage'>resampleImage</a></span>( <span class='fu'><a href='http://www.rdocumentation.org/packages/ANTsRCore/topics/ri'>ri</a></span>(<span class='fl'>1</span>), <span class='fl'>8</span> )
-<span class='no'>sup</span> <span class='kw'>=</span> <span class='fu'>staticSuperResolution</span>( <span class='no'>temp1</span>, <span class='fl'>2</span> )</div></pre>
+<span class='no'>sup</span> <span class='kw'>=</span> <span class='fu'>staticSuperResolution</span>( <span class='no'>temp1</span>, <span class='fl'>2</span> )</div><div class='output co'>#&gt; <span class='error'>Error in resampleImage(antsGetSpacing(inputImage)/expansionFactor): trying to get slot "pixeltype" from an object of a basic class ("numeric") with no slots</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

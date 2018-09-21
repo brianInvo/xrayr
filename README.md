@@ -1,10 +1,15 @@
+# xrayr
 
-# See documentation at [this site](http://brianinvo.github.io/xrayr/index.html)
+See source code at [github](https://github.com/brianInvo/xrayr)
+
+See documentation at [this site](http://brianinvo.github.io/xrayr/index.html)
+
+
+<!--
 
 # see [this](https://medium.com/@sebagomez/installing-the-docker-client-on-ubuntus-windows-subsystem-for-linux-612b392a44c4
 # ) 
 # for windows docker install instrux .... needed for neuralenhance
-
 
 
 # neuralenahance
@@ -15,4 +20,4 @@ alias enhance='function ne() { docker run --rm -v "$(pwd)/`dirname ${@:$#}`":/ne
 
 # Now run any of the examples above using this alias, without the `.py` extension.
 # enhance --zoom=1 --model=repair images/broken.jpg
-
+-->

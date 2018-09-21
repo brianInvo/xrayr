@@ -4,15 +4,14 @@
 \alias{staticSuperResolution}
 \title{Static super resolution algorithms.}
 \usage{
-staticSuperResolution(inputImage, expansionFactor,
-  method = "neurenhance")
+staticSuperResolution(inputImage, expansionFactor, method = "sharpen")
 }
 \arguments{
 \item{inputImage}{image to be expanded}
 
 \item{expansionFactor}{float value}
 
-\item{method}{one of pysr, neurenhance}
+\item{method}{one of sharpen, pysr, neurenhance}
 }
 \value{
 super resolution image
