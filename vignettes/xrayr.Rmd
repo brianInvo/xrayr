@@ -52,10 +52,44 @@ JLF
 
 ## Super resolution
 
-Motion correction.
+Real data.
 
-```{r sr}
-sup = timeSeriesSuperResolution( temp1, reg, method = 'average' )
+### PROCEDURE OUTLINE
+1.  downsample-upsample to create simulated data
+2.  motion correct
+3.  avg/sharpen to get super-res estimate
+  
+procedure would differ slightly in a pure testing context
+ie it would be iterated until convergence
+but ultimately should probably be replaced with convnets
+
+
+```{r sr,eval=FALSE}
+################
+library( ANTsR )
+library( xrayr )
+baseDir = "/mnt/c/Users/bavants/projects/kmXrayPilotData/superRes/lowres/"
+id = "0070"
+fns = Sys.glob( paste0( baseDir, "*", id, "*mhd" ) )
+img = antsImageRead( fns[1] )
+limg = splitNDImageToList( img )
+mimgLow = list()
+ww = c( 5, 1:4,6:8) # arbitrarily chosen
+limg = limg[ ww[ -1 ] ] # some stuff nearby
+for ( k in 1:length( limg ) ) {
+  # downsample by factor of X for training data
+  X = 2.7
+  hiSpc = antsGetSpacing( limg[[ k ]])
+  loSpc = hiSpc * X
+  moLo = resampleImage( limg[[ k ]], loSpc, useVoxels = F )
+  mimgLow[[ k ]] = moLo
+  }
+
+# map time series
+reg = timeSeriesMotionCorrect( tar, mimgLow )
+sup = timeSeriesSuperResolution( tar, reg, 'sharpen', param1 = 0.5 )
+print(  MSE( tar, sup ) )
+
 ```
 
 
